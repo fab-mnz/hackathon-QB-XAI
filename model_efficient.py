@@ -85,11 +85,11 @@ class HackathonModel(LightningModule):
                 self.ch_in = ch_out
             self.layers.append(nn.Sequential(*layer))
 
-        self.layers.append(nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0))
+        self.layers.append(nn.Conv2d(320, 1280, kernel_size=3, stride=2, padding=1))
 
-        self.pool = nn.MaxPool2d(kernel_size=8)
+        self.pool = nn.MaxPool2d(kernel_size=2)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(1*1*1280, 128)
+        self.linear = nn.Linear(2*2*1280, 128)
         self.head = nn.Linear(128, 1)
 
         self.relu = nn.ReLU6()
@@ -146,8 +146,8 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=3e-3)
-        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.97)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
         #lr_scheduler = torch.optim.lr_scheduler.CossineAnnealingLR(optimizer, T_max=10)
         #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
