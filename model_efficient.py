@@ -16,6 +16,7 @@ class ConvBNReLU(nn.Sequential):
 class bottleneck_layer(nn.Module):
     def __init__(self, ks, ch_out, ch_in, s, t):
         super(bottleneck_layer, self).__init__()
+        self.res = s==1 and ch_in == ch_out
 
         ch_expand = int(round(t * ch_in))
         self.conv = nn.Sequential(
@@ -25,7 +26,10 @@ class bottleneck_layer(nn.Module):
         )
 
     def forward(self, x):
-        return x + self.conv(x)
+        if self.res:
+            return x + self.conv(x)
+        else:
+            return self.conv(x)
 
 
 class HackathonModel(LightningModule):
