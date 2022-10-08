@@ -60,18 +60,18 @@ class HackathonModel(LightningModule):
             nn.Conv2d(4, 8, 3, padding=1)
         )
         self.res_block2 = nn.Sequential(
-            nn.Conv2d(16, 8, 3, padding=1),
+            nn.Conv2d(16, 4, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(8, 8, 1),
+            nn.Conv2d(4, 4, 1),
             nn.ReLU(),
-            nn.Conv2d(8, 16, 3, padding=1)
+            nn.Conv2d(4, 16, 3, padding=1)
         )
         self.res_block3 = nn.Sequential(
-            nn.Conv2d(32, 16, 3, padding=1),
+            nn.Conv2d(32, 4, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(16, 16, 1),
+            nn.Conv2d(4, 4, 1),
             nn.ReLU(),
-            nn.Conv2d(16, 32, 3, padding=1)
+            nn.Conv2d(4, 32, 3, padding=1)
         )
         self.res_block4 = nn.Sequential(
             nn.Conv2d(64, 32, 3, padding=1),
@@ -81,11 +81,11 @@ class HackathonModel(LightningModule):
             nn.Conv2d(32, 64, 3, padding=1)
         )
         self.res_block5 = nn.Sequential(
-            nn.Conv2d(128, 64, 3, padding=1),
+            nn.Conv2d(128, 4, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(64, 64, 1),
+            nn.Conv2d(4, 4, 1),
             nn.ReLU(),
-            nn.Conv2d(64, 128, 3, padding=1)
+            nn.Conv2d(4, 128, 3, padding=1)
         )
 
         # self.downsample6 = nn.Sequential(
@@ -213,7 +213,7 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=2e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
         lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
 
         opt = {

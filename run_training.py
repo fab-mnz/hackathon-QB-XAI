@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     trainer = Trainer(accelerator='gpu',
                       devices=1,
-                      max_epochs=150,
+                      max_epochs=-1,
                       val_check_interval=30,
                       callbacks=[model_ckpt, lr_monitor],
                       logger=logger)
