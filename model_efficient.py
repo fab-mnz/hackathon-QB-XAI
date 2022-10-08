@@ -89,7 +89,7 @@ class HackathonModel(LightningModule):
 
         self.pool = nn.MaxPool2d(kernel_size=2)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(8*8*1280, 128)
+        self.linear = nn.Linear(4*4*1280, 128)
         self.head = nn.Linear(128, 1)
 
         self.relu = nn.ReLU6()
@@ -129,7 +129,7 @@ class HackathonModel(LightningModule):
 
         h = self.layers[-1](h)
 
-        #h = self.pool(h)
+        h = self.pool(h)
 
         encoding = self.flatten(h)
         output = self.head(self.relu(self.linear(encoding)))
