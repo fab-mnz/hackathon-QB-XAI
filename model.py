@@ -9,8 +9,21 @@ class HackathonModel(LightningModule):
         self.build_model()
 
     def build_model(self):
-        # EXAMPLE MODEL, CHANGE FOR HACKATHON
-        self.linear = nn.Linear(10240, 10)
+        self.encode = nn.Sequential(
+            nn.Conv2d(3, 32, 5),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+
+            nn.Conv2d(32, 1, 5),
+            nn.BatchNorm2d(1),
+            nn.ReLU(),
+
+            nn.Flatten()
+        )
+
+        self.linear = nn.Linear(61504, 128)
+        self.relu = nn.ReLU()
+        self.head = nn.Linear(128, 1)
 
     def training_step(self, batch, batch_idx):
         loss, metrics = self._shared_step(batch)
@@ -31,32 +44,27 @@ class HackathonModel(LightningModule):
         return loss
 
     def _shared_step(self, batch):
-        logits = self.forward(batch)
+        output = self.forward(batch)
 
-        loss = self.calc_loss(logits, batch[1])
+        loss = self.calc_loss(output, batch['class'])
 
-        metrics = self.calc_metrics(logits, batch[1])
+        metrics = self.calc_metrics(output, batch['class'])
 
         return loss, metrics
 
-    def get_input(self, batch):
-
-
-        print('b')
-
     def forward(self, batch):
-        input = self.get_input(batch)
+        encoding = self.encode(torch.transpose(batch['img'], -1, 1))
 
-        encoding = self.encode(batch[0])
+        output = self.head(self.relu(self.linear(encoding)))
+        output = torch.squeeze(output)
 
-        logits = self.linear(encoding)
-
-        return logits
+        return output
 
     def calc_loss(self, prediction, target):
-        ce_loss = nn.CrossEntropyLoss(reduction='none')
+        ce_loss = nn.BCELoss(reduction='none')
+        m = nn.Sigmoid()
 
-        loss = ce_loss(prediction, target)
+        loss = ce_loss(m(prediction), target.float())
 
         return loss
 
@@ -71,11 +79,11 @@ class HackathonModel(LightningModule):
 
         return opt
 
-    def calc_metrics(self, logits, target):
+    def calc_metrics(self, prediction, target):
         metrics = {}
 
-        prediction = torch.argmax(logits, dim=1)
-        batch_size = len(logits)
+        prediction = prediction > 0
+        batch_size = len(prediction)
 
         metrics['accuracy'] = (prediction == target).sum() / batch_size
 
