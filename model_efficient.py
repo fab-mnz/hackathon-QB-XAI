@@ -77,8 +77,8 @@ class HackathonModel(LightningModule):
             for l in layer_sequence:
                 ks, ch_out, s, t = l
                 layer.append(bottleneck_layer(ks, ch_out, self.ch_in, s, t))
-            self.ch_in = ch_out
-        self.layers.append(nn.Sequential(*layer))
+                self.ch_in = ch_out
+            self.layers.append(nn.Sequential(*layer))
 
         self.layers.append(nn.Conv2d(1, 1280, kernel_size=1, stride=1, padding=0))
 
