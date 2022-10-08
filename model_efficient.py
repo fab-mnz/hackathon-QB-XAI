@@ -91,7 +91,7 @@ class HackathonModel(LightningModule):
         self.linear = nn.Linear(4*4*1280, 128)
         self.head = nn.Linear(128, 1)
 
-        self.relu = nn.ReLU6
+        self.relu = nn.ReLU6()
 
     def training_step(self, batch, batch_idx):
         loss, metrics = self._shared_step(batch)
