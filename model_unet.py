@@ -195,9 +195,8 @@ class HackathonModel(LightningModule):
         metrics = {}
 
         prediction = (prediction > 0.5).float()
-        batch_size = len(prediction)
 
-        metrics['iou'] = (prediction * target).sum() / (prediction + target - prediction * target).sum()
+        metrics['iou'] = (prediction * target).sum() / (prediction + target - (prediction * target)).sum()
 
         return metrics
 
