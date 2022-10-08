@@ -194,7 +194,8 @@ class HackathonModel(LightningModule):
     def calc_metrics(self, prediction, target):
         metrics = {}
 
-        prediction = (prediction > 0.5).float()
+        prediction = (prediction < 0.5).float()
+        target = 1 - target
 
         metrics['iou'] = (prediction * target).sum() / (prediction + target - (prediction * target)).sum()
 
