@@ -19,13 +19,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # CHANGE DATASET CLASS
-    train_dataset = HackathonDataset('train')
+    train_dataset = HackathonDataset(type='train')
     train_dataloader = DataLoader(train_dataset,
                                   batch_size=120,
                                   num_workers=6,
                                   shuffle=True)
 
-    val_dataset = HackathonDataset('val')
+    val_dataset = HackathonDataset(type='validation')
     val_dataloader = DataLoader(val_dataset,
                                 batch_size=120,
                                 num_workers=6,
