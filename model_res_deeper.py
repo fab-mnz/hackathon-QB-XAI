@@ -9,151 +9,84 @@ class HackathonModel(LightningModule):
         self.build_model()
 
     def build_model(self):
-        self.downsample1 = nn.Sequential(
-            #input
-            nn.BatchNorm2d(3),
-            nn.Conv2d(3, 8, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(8, 8, 3, padding=1),
-            nn.ReLU(),
-            #c1
-        )
-        self.downsample2 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(8, 16, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(16, 16, 3, padding=1),
-            nn.ReLU(),
-            #c2
-        )
-        self.downsample3 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(16, 32, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, 3, padding=1),
-            nn.ReLU(),
-            #c3
-        )
-        self.downsample4 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, 3, padding=1),
-            nn.ReLU()
-            #c4
-        )
-
-        self.downsample5 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(128, 128, 3, padding=1),
-            nn.ReLU()
-            # c5
-        )
-
-        self.downsample6 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(128, 256, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(256, 256, 3, padding=1),
-            nn.ReLU()
-            # c5
+        self.init_block = nn.Sequential(
+            nn.Conv2d(3, 64, 7, stride=2),
+            nn.MaxPool2d(2)
         )
 
         self.res_block1 = nn.Sequential(
-            nn.Conv2d(8, 4, 3, padding=1),
+            nn.Conv2d(64, 64, 3, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.Conv2d(4, 4, 1),
-            nn.ReLU(),
-            nn.Conv2d(4, 8, 3, padding=1)
-        )
-        self.res_block2 = nn.Sequential(
-            nn.Conv2d(16, 4, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(4, 4, 1),
-            nn.ReLU(),
-            nn.Conv2d(4, 16, 3, padding=1)
-        )
-        self.res_block3 = nn.Sequential(
-            nn.Conv2d(32, 4, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(4, 4, 1),
-            nn.ReLU(),
-            nn.Conv2d(4, 32, 3, padding=1)
-        )
-        self.res_block4 = nn.Sequential(
-            nn.Conv2d(64, 32, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, 1),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, 3, padding=1)
-        )
-        self.res_block5 = nn.Sequential(
-            nn.Conv2d(128, 4, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(4, 4, 1),
-            nn.ReLU(),
-            nn.Conv2d(4, 128, 3, padding=1)
-        )
-        self.res_block6 = nn.Sequential(
-            nn.Conv2d(256, 4, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(4, 4, 1),
-            nn.ReLU(),
-            nn.Conv2d(4, 256, 3, padding=1)
+
+            nn.Conv2d(64, 64, 3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU()
         )
 
-        # self.downsample6 = nn.Sequential(
-        #     nn.MaxPool2d(2),
-        #     nn.Conv2d(128, 256, 3, padding=1),
-        #     nn.ReLU(),
-        #     nn.Conv2d(256, 256, 3, padding=1),
-        #     nn.ReLU()
-        #     # c6
-        # )
+        self.half_block1 = nn.Sequential(
+            nn.Conv2d(64, 128, 3, stride=2),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+
+            nn.Conv2d(128, 128, 3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+        )
+
+        self.res_block2 = nn.Sequential(
+            nn.Conv2d(128, 128, 3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+
+            nn.Conv2d(128, 128, 3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU()
+        )
+
+        self.half_block2 = nn.Sequential(
+            nn.Conv2d(128, 256, 3, stride=2),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+        )
+
+        self.res_block3 = nn.Sequential(
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU()
+        )
+
+        self.half_block3 = nn.Sequential(
+            nn.Conv2d(256, 512, 3, stride=2),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+
+            nn.Conv2d(512, 512, 3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+        )
+
+        self.res_block4 = nn.Sequential(
+            nn.Conv2d(512, 512, 3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+
+            nn.Conv2d(512, 512, 3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU()
+        )
 
         self.flatten = nn.Flatten()
 
-        # self.conv_transp1 = nn.ConvTranspose2d(128, 64, 2, stride=(2, 2))
-        # self.upsample1 = nn.Sequential(
-        #     nn.Conv2d(128, 64, 3, padding=1),
-        #     nn.ReLU(),
-        #     nn.Conv2d(64, 64, 3, padding=1),
-        #     nn.ReLU()
-        # )
-
-        # self.conv_transp2 = nn.ConvTranspose2d(64, 32, 2, stride=(2, 2))
-        # self.upsample2 = nn.Sequential(
-        #     nn.Conv2d(64, 32, 3, padding=1),
-        #     nn.ReLU(),
-        #     nn.Conv2d(32, 32, 3, padding=1),
-        #     nn.ReLU()
-        # )
-        #
-        # self.conv_transp3 = nn.ConvTranspose2d(32, 16, 2, stride=(2, 2))
-        # self.upsample3 = nn.Sequential(
-        #     nn.Conv2d(32, 16, 3, padding=1),
-        #     nn.ReLU(),
-        #     nn.Conv2d(16, 16, 3, padding=1),
-        #     nn.ReLU()
-        # )
-        #
-        # self.conv_transp4 = nn.ConvTranspose2d(16, 8, 2, stride=(2, 2))
-        # self.upsample4 = nn.Sequential(
-        #     nn.Conv2d(16, 8, 3, padding=1),
-        #     nn.ReLU(),
-        #     nn.Conv2d(8, 8, 3, padding=1),
-        #     nn.ReLU()
-        # )
-        #
-        # self.final = nn.Sequential(
-        #     nn.Conv2d(8, 1, 1),
-        #     nn.Sigmoid(),
-        #     nn.Flatten()
-        # )
-
-        self.linear = nn.Linear(16384, 128)
+        self.linear = nn.Linear(18432, 128)
         self.relu = nn.ReLU()
         self.head = nn.Linear(128, 1)
 
@@ -186,36 +119,28 @@ class HackathonModel(LightningModule):
 
     def forward(self, batch):
 
-        c1 = self.downsample1(torch.transpose(batch['img'], -1, 1))
-        c1 = c1 + self.res_block1(c1)
-        c2 = self.downsample2(c1)
-        c2 = c2 + self.res_block2(c2)
-        c3 = self.downsample3(c2)
-        c3 = c3 + self.res_block3(c3)
-        c4 = self.downsample4(c3)
-        c4 = c4 + self.res_block4(c4)
-        c5 = self.downsample5(c4)
-        c5 = c5 + self.res_block5(c5)
-        c6 = self.downsample6(c5)
-        c6 = c6 + self.res_block6(c6)
+        encoding = self.init_block(torch.transpose(batch['img'], -1, 1))
+        encoding = encoding + self.res_block1(encoding)
+        encoding = encoding + self.res_block1(encoding)
+        encoding = encoding + self.res_block1(encoding)
 
-        # u6 = self.conv_transp1(c5)
-        # u6 = torch.cat([u6, c4], dim=1)
-        # c6 = self.upsample1(u6)
-        #
-        # u7 = self.conv_transp2(c6)
-        # u7 = torch.cat([u7, c3], dim=1)
-        # c7 = self.upsample2(u7)
-        #
-        # u8 = self.conv_transp3(c7)
-        # u8 = torch.cat([u8, c2], dim=1)
-        # c8 = self.upsample3(u8)
-        #
-        # u9 = self.conv_transp4(c8)
-        # u9 = torch.cat([u9, c1], dim=1)
-        # c9 = self.upsample4(u9)
-        #
-        encoding = self.flatten(c6)
+        encoding = self.half_block1(encoding)
+        encoding = encoding + self.res_block2(encoding)
+        encoding = encoding + self.res_block2(encoding)
+        encoding = encoding + self.res_block2(encoding)
+
+        encoding = self.half_block2(encoding)
+        encoding = encoding + self.res_block3(encoding)
+        encoding = encoding + self.res_block3(encoding)
+        encoding = encoding + self.res_block3(encoding)
+        encoding = encoding + self.res_block3(encoding)
+        encoding = encoding + self.res_block3(encoding)
+
+        encoding = self.half_block3(encoding)
+        encoding = encoding + self.res_block4(encoding)
+        encoding = encoding + self.res_block4(encoding)
+
+        encoding = self.flatten(encoding)
 
         output = self.head(self.relu(self.linear(encoding)))
         output = torch.squeeze(output)
@@ -231,10 +156,10 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.1)
         #lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
-        #lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=64)
-        lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
+        lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=32)
+        #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
         opt = {
             'optimizer': optimizer,
