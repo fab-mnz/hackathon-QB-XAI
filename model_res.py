@@ -53,29 +53,39 @@ class HackathonModel(LightningModule):
         )
 
         self.res_block1 = nn.Sequential(
-            nn.Conv2d(8, 8, 3, padding=1),
+            nn.Conv2d(8, 4, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(8, 8, 3, padding=1)
+            nn.Conv2d(4, 4, 1),
+            nn.ReLU(),
+            nn.Conv2d(4, 8, 3, padding=1)
         )
         self.res_block2 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=1),
+            nn.Conv2d(16, 8, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(16, 16, 3, padding=1)
+            nn.Conv2d(8, 8, 1),
+            nn.ReLU(),
+            nn.Conv2d(8, 16, 3, padding=1)
         )
         self.res_block3 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1),
+            nn.Conv2d(32, 16, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(32, 32, 3, padding=1)
+            nn.Conv2d(16, 16, 1),
+            nn.ReLU(),
+            nn.Conv2d(16, 32, 3, padding=1)
         )
         self.res_block4 = nn.Sequential(
-            nn.Conv2d(64, 64, 3, padding=1),
+            nn.Conv2d(64, 32, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(64, 64, 3, padding=1)
+            nn.Conv2d(32, 32, 1),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, 3, padding=1)
         )
         self.res_block5 = nn.Sequential(
-            nn.Conv2d(128, 128, 3, padding=1),
+            nn.Conv2d(128, 64, 3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(128, 128, 3, padding=1)
+            nn.Conv2d(64, 64, 1),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, 3, padding=1)
         )
 
         # self.downsample6 = nn.Sequential(
