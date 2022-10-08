@@ -42,8 +42,8 @@ if __name__ == '__main__':
                                  mode='max')
     lr_monitor = LearningRateMonitor()
 
-    trainer = Trainer(accelerator='cpu',
-                      #devices=1,
+    trainer = Trainer(accelerator='gpu',
+                      devices=1,
                       max_epochs=150,
                       val_check_interval=10,
                       callbacks=[model_ckpt, lr_monitor],
