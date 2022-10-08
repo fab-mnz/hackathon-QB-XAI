@@ -21,13 +21,13 @@ if __name__ == '__main__':
     # CHANGE DATASET CLASS
     train_dataset = HackathonDataset(type='train')
     train_dataloader = DataLoader(train_dataset,
-                                  batch_size=64,
+                                  batch_size=32,
                                   num_workers=4,
                                   shuffle=True)
 
     val_dataset = HackathonDataset(type='validation')
     val_dataloader = DataLoader(val_dataset,
-                                batch_size=64,
+                                batch_size=32,
                                 num_workers=4,
                                 shuffle=False)
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     trainer = Trainer(accelerator='gpu',
                       devices=1,
                       max_epochs=-1,
-                      val_check_interval=20,
+                      val_check_interval=30,
                       callbacks=[model_ckpt, lr_monitor],
                       logger=logger)
     trainer.fit(model, train_dataloader, val_dataloader)
