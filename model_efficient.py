@@ -16,6 +16,7 @@ class ConvBNReLU(nn.Sequential):
 class bottleneck_layer(nn.Module):
     def __init__(self, ks, ch_out, ch_in, s, t):
         super(bottleneck_layer, self).__init__()
+        self.res = s==1 and ch_in == ch_out
 
         ch_expand = int(round(t * ch_in))
         self.conv = nn.Sequential(
@@ -25,7 +26,10 @@ class bottleneck_layer(nn.Module):
         )
 
     def forward(self, x):
-        return x + self.conv(x)
+        if self.res:
+            return x + self.conv(x)
+        else:
+            return self.conv(x)
 
 
 class HackathonModel(LightningModule):
@@ -77,17 +81,17 @@ class HackathonModel(LightningModule):
             for l in layer_sequence:
                 ks, ch_out, s, t = l
                 layer.append(bottleneck_layer(ks, ch_out, self.ch_in, s, t))
-            self.ch_in = ch_out
-        self.layers.append(nn.Sequential(*layer))
+                self.ch_in = ch_out
+            self.layers.append(nn.Sequential(*layer))
 
-        self.layers.append(nn.Conv2d(1, 1280, kernel_size=1, stride=1, padding=0))
+        self.layers.append(nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0))
 
         self.pool = nn.MaxPool2d(kernel_size=2)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(4*4*1280, 128)
+        self.linear = nn.Linear(8*8*1280, 128)
         self.head = nn.Linear(128, 1)
 
-        self.relu = nn.ReLU6
+        self.relu = nn.ReLU6()
 
     def training_step(self, batch, batch_idx):
         loss, metrics = self._shared_step(batch)
@@ -124,7 +128,7 @@ class HackathonModel(LightningModule):
 
         h = self.layers[-1](h)
 
-        h = self.pool(h)
+        #h = self.pool(h)
 
         encoding = self.flatten(h)
         output = self.head(self.relu(self.linear(encoding)))
