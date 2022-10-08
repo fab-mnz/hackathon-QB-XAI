@@ -124,10 +124,8 @@ class HackathonModel(LightningModule):
 
         encoding = self.init_block(torch.transpose(batch['img'], -1, 1))
         encoding = encoding + self.res_block1(encoding)
-        encoding = encoding + self.res_block1(encoding)
 
         encoding = self.half_block1(encoding) + self.conv1(encoding)[..., :-1, :-1]
-        encoding = encoding + self.res_block2(encoding)
         encoding = encoding + self.res_block2(encoding)
 
         encoding = self.half_block2(encoding) + self.conv2(encoding)[..., :-1, :-1]
@@ -135,7 +133,6 @@ class HackathonModel(LightningModule):
         encoding = encoding + self.res_block3(encoding)
 
         encoding = self.half_block3(encoding) + self.conv3(encoding)[..., :-1, :-1]
-        encoding = encoding + self.res_block4(encoding)
         encoding = encoding + self.res_block4(encoding)
 
         encoding = self.flatten(encoding)
