@@ -58,16 +58,16 @@ class HackathonModel(LightningModule):
                 [3, 80, 2, exp],
                 [3, 80, 1, exp],
                 [3, 80, 1, exp],
-                [5, 140, 1, exp],
-                [5, 140, 1, exp],
-                [5, 140, 1, exp]
+                [5, 112, 1, exp],
+                [5, 112, 1, exp],
+                [5, 112, 1, exp]
             ],
             [
-                [5, 220, 2, exp],
-                [5, 220, 1, exp],
-                [5, 220, 1, exp],
-                [5, 220, 1, exp],
-                [3, 360, 1, exp]
+                [5, 192, 2, exp],
+                [5, 192, 1, exp],
+                [5, 192, 1, exp],
+                [5, 192, 1, exp],
+                [3, 320, 1, exp]
             ]
         ]
 
@@ -86,12 +86,12 @@ class HackathonModel(LightningModule):
                 self.ch_in = ch_out
             self.layers.append(nn.Sequential(*layer))
 
-        self.layers.append(nn.Conv2d(360, 1280, kernel_size=1, stride=1, padding=0))
+        self.layers.append(nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0))
 
         self.pool = nn.MaxPool2d(kernel_size=4)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(2*2*1280, 256)
-        self.head = nn.Linear(256, 1)
+        self.linear = nn.Linear(2*2*1280, 64)
+        self.head = nn.Linear(64, 1)
 
         self.relu = nn.ReLU6()
 
