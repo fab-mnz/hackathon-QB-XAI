@@ -22,7 +22,8 @@ class bottleneck_layer(nn.Module):
         self.conv = nn.Sequential(
             ConvBNReLU(ch_in, ch_expand, kernel_size=1, stride=1),
             ConvBNReLU(ch_expand, ch_expand, kernel_size=ks, stride=s, groups=ch_expand),
-            nn.Conv2d(ch_expand, ch_out, kernel_size=1, stride=1, padding=0, bias=False)
+            nn.Conv2d(ch_expand, ch_out, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(ch_out)
         )
 
     def forward(self, x):
