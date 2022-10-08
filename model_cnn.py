@@ -52,14 +52,14 @@ class HackathonModel(LightningModule):
             # c5
         )
 
-        self.downsample6 = nn.Sequential(
-            nn.MaxPool2d(2),
-            nn.Conv2d(128, 256, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(256, 256, 3, padding=1),
-            nn.ReLU()
-            # c6
-        )
+        # self.downsample6 = nn.Sequential(
+        #     nn.MaxPool2d(2),
+        #     nn.Conv2d(128, 256, 3, padding=1),
+        #     nn.ReLU(),
+        #     nn.Conv2d(256, 256, 3, padding=1),
+        #     nn.ReLU()
+        #     # c6
+        # )
 
         self.flatten = nn.Flatten()
 
@@ -101,7 +101,7 @@ class HackathonModel(LightningModule):
         #     nn.Flatten()
         # )
 
-        self.linear = nn.Linear(16384, 128)
+        self.linear = nn.Linear(32768, 128)
         self.relu = nn.ReLU()
         self.head = nn.Linear(128, 1)
 
@@ -140,8 +140,6 @@ class HackathonModel(LightningModule):
         c4 = self.downsample4(c3)
         c5 = self.downsample5(c4)
 
-        c6 = self.downsample6(c5)
-
         # u6 = self.conv_transp1(c5)
         # u6 = torch.cat([u6, c4], dim=1)
         # c6 = self.upsample1(u6)
@@ -158,7 +156,7 @@ class HackathonModel(LightningModule):
         # u9 = torch.cat([u9, c1], dim=1)
         # c9 = self.upsample4(u9)
         #
-        encoding = self.flatten(c6)
+        encoding = self.flatten(c5)
 
         output = self.head(self.relu(self.linear(encoding)))
         output = torch.squeeze(output)
