@@ -1,6 +1,8 @@
 import argparse
 
 from model import HackathonModel
+from dataset import HackathonDataset
+
 from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
@@ -17,13 +19,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # CHANGE DATASET CLASS
-    train_dataset = MNIST(root='.', train=True, download=True, transform=ToTensor())
+    train_dataset = HackathonDataset('train')
     train_dataloader = DataLoader(train_dataset,
                                   batch_size=120,
                                   num_workers=6,
                                   shuffle=True)
 
-    val_dataset = MNIST(root='.', train=False, download=True, transform=ToTensor())
+    val_dataset = HackathonDataset('val')
     val_dataloader = DataLoader(val_dataset,
                                 batch_size=120,
                                 num_workers=6,
