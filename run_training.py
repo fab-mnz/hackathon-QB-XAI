@@ -37,8 +37,8 @@ if __name__ == '__main__':
     # CHANGE WHICH METRIC IS IMPORTANT TO SAVE CHECKPOINTS
     logger = TensorBoardLogger('.', version=args.version)
     model_ckpt = ModelCheckpoint(dirpath=f'lightning_logs/{args.version}/checkpoints',
-                                 save_top_k=2,
-                                 monitor='accuracy_val',
+                                 save_top_k=0,
+                                 #monitor='accuracy_val',
                                  mode='max')
     lr_monitor = LearningRateMonitor()
 
