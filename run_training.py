@@ -21,13 +21,13 @@ if __name__ == '__main__':
     # CHANGE DATASET CLASS
     train_dataset = HackathonDataset(type='train')
     train_dataloader = DataLoader(train_dataset,
-                                  batch_size=32,
+                                  batch_size=64,
                                   num_workers=4,
                                   shuffle=True)
 
     val_dataset = HackathonDataset(type='validation')
     val_dataloader = DataLoader(val_dataset,
-                                batch_size=32,
+                                batch_size=64,
                                 num_workers=4,
                                 shuffle=False)
 
