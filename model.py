@@ -10,30 +10,6 @@ class HackathonModel(LightningModule):
 
     def build_model(self):
         # EXAMPLE MODEL, CHANGE FOR HACKATHON
-        self.encode = nn.Sequential(
-            nn.Conv2d(1, 32, 5),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-
-            nn.Conv2d(32, 64, 5),
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-
-            nn.Conv2d(64, 96, 5),
-            nn.BatchNorm2d(96),
-            nn.ReLU(),
-
-            nn.Conv2d(96, 128, 5),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-
-            nn.Conv2d(128, 160, 5),
-            nn.BatchNorm2d(160),
-            nn.ReLU(),
-
-            nn.Flatten()
-        )
-
         self.linear = nn.Linear(10240, 10)
 
     def training_step(self, batch, batch_idx):
@@ -63,7 +39,14 @@ class HackathonModel(LightningModule):
 
         return loss, metrics
 
+    def get_input(self, batch):
+
+
+        print('b')
+
     def forward(self, batch):
+        input = self.get_input(batch)
+
         encoding = self.encode(batch[0])
 
         logits = self.linear(encoding)
