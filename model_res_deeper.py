@@ -24,6 +24,7 @@ class HackathonModel(LightningModule):
             nn.ReLU()
         )
 
+        self.conv1 = nn.Conv2d(64, 128, 1, stride=2)
         self.half_block1 = nn.Sequential(
             nn.Conv2d(64, 128, 3, stride=2),
             nn.BatchNorm2d(128),
@@ -44,6 +45,7 @@ class HackathonModel(LightningModule):
             nn.ReLU()
         )
 
+        self.conv2 = nn.Conv2d(128, 256, 1, stride=2)
         self.half_block2 = nn.Sequential(
             nn.Conv2d(128, 256, 3, stride=2),
             nn.BatchNorm2d(256),
@@ -64,6 +66,7 @@ class HackathonModel(LightningModule):
             nn.ReLU()
         )
 
+        self.conv3 = nn.Conv2d(256, 512, 1, stride=2)
         self.half_block3 = nn.Sequential(
             nn.Conv2d(256, 512, 3, stride=2),
             nn.BatchNorm2d(512),
@@ -124,19 +127,19 @@ class HackathonModel(LightningModule):
         encoding = encoding + self.res_block1(encoding)
         encoding = encoding + self.res_block1(encoding)
 
-        encoding = self.half_block1(encoding)
+        encoding = self.half_block1(encoding) + self.conv1(encoding)[..., :-1, :-1]
         encoding = encoding + self.res_block2(encoding)
         encoding = encoding + self.res_block2(encoding)
         encoding = encoding + self.res_block2(encoding)
 
-        encoding = self.half_block2(encoding)
+        encoding = self.half_block2(encoding) + self.conv2(encoding)[..., :-1, :-1]
         encoding = encoding + self.res_block3(encoding)
         encoding = encoding + self.res_block3(encoding)
         encoding = encoding + self.res_block3(encoding)
         encoding = encoding + self.res_block3(encoding)
         encoding = encoding + self.res_block3(encoding)
 
-        encoding = self.half_block3(encoding)
+        encoding = self.half_block3(encoding) + self.conv3(encoding)[..., :-1, :-1]
         encoding = encoding + self.res_block4(encoding)
         encoding = encoding + self.res_block4(encoding)
 
@@ -156,10 +159,10 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.8e-3)
-        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        #lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
         #lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=32)
-        #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 10, gamma=0.75)
+        lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
         opt = {
             'optimizer': optimizer,
