@@ -158,7 +158,7 @@ class HackathonModel(LightningModule):
         # u9 = torch.cat([u9, c1], dim=1)
         # c9 = self.upsample4(u9)
         #
-        encoding = self.flatten(c8)
+        encoding = self.flatten(c6)
 
         output = self.head(self.relu(self.linear(encoding)))
         output = torch.squeeze(output)
