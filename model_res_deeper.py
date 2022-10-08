@@ -153,7 +153,7 @@ class HackathonModel(LightningModule):
         #     nn.Flatten()
         # )
 
-        self.linear = nn.Linear(32768, 128)
+        self.linear = nn.Linear(16384, 128)
         self.relu = nn.ReLU()
         self.head = nn.Linear(128, 1)
 
