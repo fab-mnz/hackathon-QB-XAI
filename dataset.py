@@ -21,9 +21,11 @@ class HackathonDataset(Dataset):
             self.data[i]['class'] = temp[key]['class']
             self.data[i]['split'] = temp[key]['split']
             img = image.imread(f'ai_ready/images/{file}')
+            img_preprocessed = image.imread(f'ai_ready/preprocessing/{file}')
             mask = image.imread(f'ai_ready/masks/{file}')
 
             self.data[i]['img'] = img
+            self.data[i]['img_preprocessed'] = img_preprocessed
             self.data[i]['mask'] = mask
             i += 1
 
