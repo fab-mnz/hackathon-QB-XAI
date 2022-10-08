@@ -22,7 +22,8 @@ class bottleneck_layer(nn.Module):
         self.conv = nn.Sequential(
             ConvBNReLU(ch_in, ch_expand, kernel_size=1, stride=1),
             ConvBNReLU(ch_expand, ch_expand, kernel_size=ks, stride=s, groups=ch_expand),
-            nn.Conv2d(ch_expand, ch_out, kernel_size=1, stride=1, padding=0, bias=False)
+            nn.Conv2d(ch_expand, ch_out, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(ch_out)
         )
 
     def forward(self, x):
@@ -88,7 +89,7 @@ class HackathonModel(LightningModule):
 
         self.pool = nn.MaxPool2d(kernel_size=2)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(8*8*1280, 128)
+        self.linear = nn.Linear(4*4*1280, 128)
         self.head = nn.Linear(128, 1)
 
         self.relu = nn.ReLU6()
@@ -128,7 +129,7 @@ class HackathonModel(LightningModule):
 
         h = self.layers[-1](h)
 
-        #h = self.pool(h)
+        h = self.pool(h)
 
         encoding = self.flatten(h)
         output = self.head(self.relu(self.linear(encoding)))
@@ -145,8 +146,10 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-4)
         lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
+        #lr_scheduler = torch.optim.lr_scheduler.CossineAnnealingLR(optimizer, T_max=10)
+        #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
         opt = {
             'optimizer': optimizer,
