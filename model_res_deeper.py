@@ -196,8 +196,8 @@ class HackathonModel(LightningModule):
         c4 = c4 + self.res_block4(c4)
         c5 = self.downsample5(c4)
         c5 = c5 + self.res_block5(c5)
-        c6 = self.downsample5(c5)
-        c6 = c6 + self.res_block5(c6)
+        c6 = self.downsample6(c5)
+        c6 = c6 + self.res_block6(c6)
 
         # u6 = self.conv_transp1(c5)
         # u6 = torch.cat([u6, c4], dim=1)
