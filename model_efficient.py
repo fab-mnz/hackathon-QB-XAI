@@ -42,7 +42,7 @@ class HackathonModel(LightningModule):
         self.ch_in=32
 
         exp = 4
-        self.config = [
+        self.config1 = [
             [
                 [3, 16, 1, 1]
             ],
@@ -71,6 +71,37 @@ class HackathonModel(LightningModule):
             ]
         ]
 
+        self.config2 = [
+            [
+                [3, 24, 1, 3]
+            ],
+            [
+                [3, 32, 2, exp],
+                [3, 32, 1, exp]
+            ],
+            [
+                [3, 48, 2, exp],
+                [3, 48, 1, exp],
+                [3, 48, 1, exp],
+                [3, 48, 1, exp]
+            ],
+            [
+                [5, 96, 2, exp],
+                [5, 96, 1, exp],
+                [5, 96, 1, exp],
+                [5, 96, 1, exp],
+                [5, 96, 1, exp],
+                [5, 144, 1, exp],
+                [5, 144, 1, exp],
+                [5, 144, 1, exp],
+                [5, 144, 1, exp]
+            ],
+            [
+                [5, 192, 2, exp],
+                [5, 192, 1, exp]
+            ]
+        ]
+
         self.build_model()
 
 
@@ -78,7 +109,7 @@ class HackathonModel(LightningModule):
 
         self.layers.append(nn.Conv2d(3, self.ch_in, kernel_size=3, stride=2, padding=1))
 
-        for layer_sequence in self.config:
+        for layer_sequence in self.config1:
             layer = []
             for l in layer_sequence:
                 ks, ch_out, s, t = l

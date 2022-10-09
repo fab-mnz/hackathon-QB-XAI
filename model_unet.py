@@ -1,12 +1,14 @@
 import torch.optim
 from pytorch_lightning import LightningModule
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 class HackathonModel(LightningModule):
 
     def __init__(self):
         super(HackathonModel, self).__init__()
         self.build_model()
+        self.interesting_sample_indexes = list(range(0, 1000, 50))
 
     def build_model(self):
         self.downsample1 = nn.Sequential(
@@ -116,7 +118,7 @@ class HackathonModel(LightningModule):
         )
 
     def training_step(self, batch, batch_idx):
-        loss, metrics = self._shared_step(batch)
+        loss, metrics, output = self._shared_step(batch)
 
         loss = loss.mean()
         self.log_metrics(metrics, 'train')
@@ -125,11 +127,21 @@ class HackathonModel(LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        loss, metrics = self._shared_step(batch)
+        loss, metrics, output = self._shared_step(batch)
 
         loss = loss.mean()
         self.log_metrics(metrics, 'val')
         self.log('loss_val', loss, on_step=False, on_epoch=True, logger=True)
+
+        batch_size = len(batch['img'])
+        for i in range(batch_size):
+            idx = batch_size * batch_idx + i
+            if idx in self.interesting_sample_indexes:
+                fig = plt.figure()
+                plt.imshow(output[i])
+                file = batch['filename'][i]
+                plt.savefig(f'segmentation_results/seg_{file}')
+                plt.close(fig)
 
         return loss
 
@@ -140,7 +152,7 @@ class HackathonModel(LightningModule):
 
         metrics = self.calc_metrics(output, batch['mask'])
 
-        return loss, metrics
+        return loss, metrics, output
 
     def forward(self, batch):
 
