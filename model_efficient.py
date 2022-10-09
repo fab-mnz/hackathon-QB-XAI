@@ -41,7 +41,7 @@ class HackathonModel(LightningModule):
 
         self.ch_in=32
 
-        exp = 5
+        exp = 6
         self.config1 = [
             [
                 [3, 16, 1, 1]
@@ -126,6 +126,8 @@ class HackathonModel(LightningModule):
 
         self.relu = nn.ReLU6()
 
+        self.dropout = nn.Dropout(0.15)
+
     def training_step(self, batch, batch_idx):
         loss, metrics = self._shared_step(batch)
 
@@ -156,6 +158,7 @@ class HackathonModel(LightningModule):
     def forward(self, batch):
         h = self.layers[0](torch.transpose(batch['img'], -1, 1))
 
+        h = self.dropout(h)
         for layer in self.layers[1:-1]:
             h = layer(h)
 
@@ -163,7 +166,11 @@ class HackathonModel(LightningModule):
 
         h = self.pool(h)
 
+
         encoding = self.flatten(h)
+
+        encoding = self.dropout(encoding)
+
         output = self.head(self.relu(self.linear(encoding)))
         output = torch.squeeze(output)
 
