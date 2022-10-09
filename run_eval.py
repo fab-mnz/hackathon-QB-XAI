@@ -1,32 +1,43 @@
 import argparse
-
-from model_unet import HackathonModel
+import torch
+from models.model_unet import HackathonModel
 from dataset import HackathonDataset
 
-from torchvision.datasets import MNIST
-from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
 
-from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
-from pytorch_lightning.loggers import TensorBoardLogger
+import matplotlib.pyplot as plt
+from matplotlib import image
+
+from collections import defaultdict
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ckpt', '-c')
+    parser.add_argument('--image_path', '-p')
 
     args = parser.parse_args()
 
-    val_dataset = HackathonDataset(type='validation')
-    val_dataloader = DataLoader(val_dataset,
-                                batch_size=1,
-                                num_workers=4,
-                                shuffle=False)
+    img = image.imread(args.image_path)
+    img = torch.tensor(img)
 
-    model = HackathonModel.load_from_checkpoint(args.ckpt)
+    input = defaultdict()
+    input['img'] = img[None, :]
 
-    trainer = Trainer(accelerator='cpu',
-                      # devices=1,
-                     )
-    result = trainer.test(model, val_dataloader)
+    from models.model_unet import HackathonModel
+    model = HackathonModel.load_from_checkpoint('model_weights/unet.ckpt')
+    model.eval()
+
+    segmented = model(input)
+
+    plt.imshow(segmented.cpu().detach().numpy(), cmap='Greys')
+    plt.savefig('eval_outs/seg')
+
+    from models.model_efficient import HackathonModel
+    model = HackathonModel.load_from_checkpoint('model_weights/efficientnet.ckpt')
+    model.eval()
+
+    has_silo = model(input)
+    out = torch.nn.Sigmoid()(has_silo)
+    f = open("eval_outs/out.txt", "w")
+    f.write(f'{out}')
+    f.close()
