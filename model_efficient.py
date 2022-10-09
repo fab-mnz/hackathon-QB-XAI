@@ -109,7 +109,7 @@ class HackathonModel(LightningModule):
 
         self.layers.append(nn.Conv2d(3, self.ch_in, kernel_size=3, stride=2, padding=1))
 
-        for layer_sequence in self.config1:
+        for layer_sequence in self.config2:
             layer = []
             for l in layer_sequence:
                 ks, ch_out, s, t = l
@@ -119,9 +119,9 @@ class HackathonModel(LightningModule):
 
         self.layers.append(nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0))
 
-        self.pool = nn.MaxPool2d(kernel_size=8)
+        self.pool = nn.MaxPool2d(kernel_size=4)
         self.flatten = nn.Flatten()
-        self.linear = nn.Linear(1*1*1280, 256)
+        self.linear = nn.Linear(2*2*1280, 256)
         self.head = nn.Linear(256, 1)
 
         self.relu = nn.ReLU6()
