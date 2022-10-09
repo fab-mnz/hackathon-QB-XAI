@@ -126,7 +126,7 @@ class HackathonModel(LightningModule):
 
         self.relu = nn.ReLU6()
 
-        self.dropout = nn.Dropout(0.07)
+        self.dropout = nn.Dropout(0.12)
 
     def training_step(self, batch, batch_idx):
         loss, metrics = self._shared_step(batch)
@@ -185,8 +185,8 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=3e-3)
-        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.975)
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.7e-4)
+        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.985)
         #lr_scheduler = torch.optim.lr_scheduler.CossineAnnealingLR(optimizer, T_max=10)
         #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
