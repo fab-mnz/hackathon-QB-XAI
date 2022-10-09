@@ -41,7 +41,7 @@ class HackathonModel(LightningModule):
 
         self.ch_in=32
 
-        exp = 4
+        exp = 8
         self.config1 = [
             [
                 [3, 16, 1, 1]
@@ -117,7 +117,7 @@ class HackathonModel(LightningModule):
                 self.ch_in = ch_out
             self.layers.append(nn.Sequential(*layer))
 
-        self.layers.append(nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0))
+        self.layers.append(nn.Conv2d(192, 1280, kernel_size=1, stride=1, padding=0))
 
         self.pool = nn.MaxPool2d(kernel_size=4)
         self.flatten = nn.Flatten()
