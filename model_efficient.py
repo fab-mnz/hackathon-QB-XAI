@@ -185,8 +185,8 @@ class HackathonModel(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
+        optimizer = torch.optim.Adam(self.parameters(), lr=3e-4)
+        lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
         #lr_scheduler = torch.optim.lr_scheduler.CossineAnnealingLR(optimizer, T_max=10)
         #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.5)
 
