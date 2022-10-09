@@ -41,7 +41,7 @@ class HackathonModel(LightningModule):
 
         self.ch_in=32
 
-        exp = 8
+        exp = 5
         self.config1 = [
             [
                 [3, 16, 1, 1]
