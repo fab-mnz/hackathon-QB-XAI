@@ -169,7 +169,7 @@ class HackathonModel(LightningModule):
 
         encoding = self.flatten(h)
 
-        encoding = self.dropout(encoding)
+        #encoding = self.dropout(encoding)
 
         output = self.head(self.relu(self.linear(encoding)))
         output = torch.squeeze(output)
