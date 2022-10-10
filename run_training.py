@@ -1,11 +1,9 @@
 import argparse
 
-from model_efficient import HackathonModel
+from models.model_efficient import HackathonModel
 
 from dataset import HackathonDataset
 
-from torchvision.datasets import MNIST
-from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
 
 from pytorch_lightning import Trainer
