@@ -1,5 +1,5 @@
 # hackathon QuantumBlack, McKinsey + Binet IA, École Polytechnique
-# Brasil'IA
+### Brasil'IA
 
 The problem of the hackathon consisted in classifying satellite images to check whether they had silos in them, to
 aid a certain start-up know where to place new silos. As a bonus task, the goal was to segment images into the classes
