@@ -21,3 +21,5 @@ The best model found was ``model_efficient`` for classification. The only model 
 
 To run evaluation on a .csv with the same format as the ones found inside the dataset folder, run ``python run_eval -p 
 path_to_csv``.
+
+The site is inside `my-app` folder. To launch the site, run `npm start` inside the folder.
